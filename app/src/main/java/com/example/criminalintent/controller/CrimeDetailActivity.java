@@ -1,6 +1,7 @@
 package com.example.criminalintent.controller;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
@@ -23,11 +24,16 @@ public class CrimeDetailActivity extends AppCompatActivity {
         //get fragment manager
         FragmentManager fragmentManager = getSupportFragmentManager();
 
+        //check if fragment exists in container (configuration changes save the fragments)
+        Fragment fragment = fragmentManager.findFragmentById(R.id.fragment_container);
+
         //create an add fragment transaction for CrimeDetailFragment
-        CrimeDetailFragment crimeDetailFragment = new CrimeDetailFragment();
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.fragment_container, crimeDetailFragment)
-                .commit();
+        if (fragment == null) {
+            CrimeDetailFragment crimeDetailFragment = new CrimeDetailFragment();
+            fragmentManager
+                    .beginTransaction()
+                    .add(R.id.fragment_container, crimeDetailFragment)
+                    .commit();
+        }
     }
 }
