@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,6 +69,7 @@ public class CrimeListFragment extends Fragment {
 
         private TextView mTextViewTitle;
         private TextView mTextViewDate;
+        private ImageView mImageViewSolved;
         private Crime mCrime;
 
         public CrimeHolder(@NonNull View itemView) {
@@ -75,10 +77,12 @@ public class CrimeListFragment extends Fragment {
 
             mTextViewTitle = itemView.findViewById(R.id.row_item_crime_title);
             mTextViewDate = itemView.findViewById(R.id.row_item_crime_date);
+            mImageViewSolved = itemView.findViewById(R.id.imgview_solved);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    //TODO: Refactore creating new intent.
                     Intent intent = new Intent(getActivity(), CrimeDetailActivity.class);
                     intent.putExtra(EXTRA_CRIME_ID, mCrime.getId());
                     startActivity(intent);
@@ -90,6 +94,7 @@ public class CrimeListFragment extends Fragment {
             mCrime = crime;
             mTextViewTitle.setText(crime.getTitle());
             mTextViewDate.setText(crime.getDate().toString());
+            mImageViewSolved.setVisibility(crime.isSolved() ? View.VISIBLE : View.GONE);
         }
     }
 
