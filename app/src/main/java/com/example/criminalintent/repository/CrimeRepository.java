@@ -26,6 +26,8 @@ public class CrimeRepository {
             Crime crime = new Crime();
             crime.setTitle("Crime#" + (i + 1));
             crime.setSolved(i % 2 == 0);
+
+            mCrimes.add(crime);
         }
     }
 
