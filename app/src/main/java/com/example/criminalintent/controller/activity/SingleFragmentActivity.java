@@ -1,27 +1,24 @@
-package com.example.criminalintent.controller;
+package com.example.criminalintent.controller.activity;
+
+import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-
 import com.example.criminalintent.R;
 
-public class CrimeDetailActivity extends AppCompatActivity {
+public abstract class SingleFragmentActivity extends AppCompatActivity {
+
+    public abstract Fragment createFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         //inflate layout for activity
-        setContentView(R.layout.activity_crime_detail);
+        setContentView(R.layout.activity_fragment);
 
-        //add CrimeDetailFragment to this activity (dynamic)
-
-        //get fragment manager
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         //check if fragment exists in container (configuration changes save the fragments)
@@ -29,10 +26,9 @@ public class CrimeDetailActivity extends AppCompatActivity {
 
         //create an add fragment transaction for CrimeDetailFragment
         if (fragment == null) {
-            CrimeDetailFragment crimeDetailFragment = new CrimeDetailFragment();
             fragmentManager
                     .beginTransaction()
-                    .add(R.id.fragment_container, crimeDetailFragment)
+                    .add(R.id.fragment_container, createFragment())
                     .commit();
         }
     }
