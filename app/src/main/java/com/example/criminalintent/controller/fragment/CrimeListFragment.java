@@ -1,10 +1,12 @@
 package com.example.criminalintent.controller.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -12,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.criminalintent.R;
+import com.example.criminalintent.controller.activity.CrimeDetailActivity;
 import com.example.criminalintent.model.Crime;
 import com.example.criminalintent.repository.CrimeRepository;
 
@@ -19,7 +22,11 @@ import java.util.List;
 
 public class CrimeListFragment extends Fragment {
 
+    public static final String EXTRA_CRIME_ID = "com.example.criminalintent.crimeId";
+
     private RecyclerView mRecyclerView;
+
+    private CrimeRepository mRepository;
 
     public CrimeListFragment() {
         // Required empty public constructor
@@ -28,6 +35,8 @@ public class CrimeListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mRepository = CrimeRepository.getInstance();
     }
 
     @Override
@@ -49,8 +58,7 @@ public class CrimeListFragment extends Fragment {
     private void initViews() {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        CrimeRepository crimeRepository = CrimeRepository.getInstance();
-        List<Crime> crimes = crimeRepository.getCrimes();
+        List<Crime> crimes = mRepository.getCrimes();
         CrimeAdapter crimeAdapter = new CrimeAdapter(crimes);
 
         mRecyclerView.setAdapter(crimeAdapter);
@@ -67,6 +75,15 @@ public class CrimeListFragment extends Fragment {
 
             mTextViewTitle = itemView.findViewById(R.id.row_item_crime_title);
             mTextViewDate = itemView.findViewById(R.id.row_item_crime_date);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), CrimeDetailActivity.class);
+                    intent.putExtra(EXTRA_CRIME_ID, mCrime.getId());
+                    startActivity(intent);
+                }
+            });
         }
 
         public void bindCrime(Crime crime) {

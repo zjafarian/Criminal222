@@ -20,6 +20,9 @@ import androidx.fragment.app.Fragment;
 
 import com.example.criminalintent.R;
 import com.example.criminalintent.model.Crime;
+import com.example.criminalintent.repository.CrimeRepository;
+
+import java.util.UUID;
 
 public class CrimeDetailFragment extends Fragment {
 
@@ -28,8 +31,8 @@ public class CrimeDetailFragment extends Fragment {
     private Button mButtonDate;
     private CheckBox mCheckBoxSolved;
 
-    //dummy object just for testing
     private Crime mCrime;
+    private CrimeRepository mRepository;
 
     public CrimeDetailFragment() {
         // Required empty public constructor
@@ -48,9 +51,13 @@ public class CrimeDetailFragment extends Fragment {
 
         Log.d(TAG, "onCreate");
 
-        mCrime = new Crime();
-//        mCrime.setTitle("Testing the crime");
-        mCrime.setSolved(true);
+        mRepository = CrimeRepository.getInstance();
+
+        //TODO: Anti pattern and code smell
+        UUID id = (UUID) getActivity().getIntent().getSerializableExtra(CrimeListFragment.EXTRA_CRIME_ID);
+
+        CrimeRepository crimeRepository = CrimeRepository.getInstance();
+        mCrime = crimeRepository.getCrime(id);
     }
 
     /**
