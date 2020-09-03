@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,6 +25,8 @@ import com.example.criminalintent.model.Crime;
 import com.example.criminalintent.repository.CrimeRepository;
 import com.example.criminalintent.repository.IRepository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class CrimeDetailFragment extends Fragment {
@@ -34,9 +37,14 @@ public class CrimeDetailFragment extends Fragment {
     private EditText mEditTextTitle;
     private Button mButtonDate;
     private CheckBox mCheckBoxSolved;
-
     private Crime mCrime;
     private IRepository mRepository;
+    private ImageButton mImgBtnFirst;
+    private ImageButton mImgBtnPrevious;
+    private ImageButton mImgBtnNext;
+    private ImageButton mImgBtnLast;
+    private int mCurrentIndex;
+    private List<Crime> mCrimeList;
 
     public static CrimeDetailFragment newInstance(UUID crimeId) {
 
@@ -64,18 +72,24 @@ public class CrimeDetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         Log.d(TAG, "onCreate");
-
+        mCrimeList = new ArrayList<>();
         mRepository = CrimeRepository.getInstance();
+        mCrimeList = mRepository.getCrimes();
 
         //this is storage of this fragment
         UUID crimeId = (UUID) getArguments().getSerializable(ARGS_CRIME_ID);
         mCrime = mRepository.getCrime(crimeId);
+        for (int i = 0; i < mRepository.getCrimes().size(); i++) {
+            if (mCrimeList.get(i).getId().equals(crimeId))
+                mCurrentIndex = i;
+        }
     }
 
     /**
      * 1. Inflate the layout (or create layout in code)
      * 2. find all views
      * 3. logic for all views (like setListeners)
+     *
      * @param inflater
      * @param container
      * @param savedInstanceState
@@ -150,6 +164,10 @@ public class CrimeDetailFragment extends Fragment {
         mEditTextTitle = view.findViewById(R.id.crime_title);
         mButtonDate = view.findViewById(R.id.crime_date);
         mCheckBoxSolved = view.findViewById(R.id.crime_solved);
+        mImgBtnPrevious = view.findViewById(R.id.img_btn_previous);
+        mImgBtnFirst = view.findViewById(R.id.img_btn_first);
+        mImgBtnNext = view.findViewById(R.id.img_btn_next);
+        mImgBtnLast = view.findViewById(R.id.img_btn_last);
     }
 
     private void initViews() {
@@ -192,6 +210,45 @@ public class CrimeDetailFragment extends Fragment {
 
             }
         });
+
+        mImgBtnFirst.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCurrentIndex = 0;
+                updateData(mCurrentIndex);
+            }
+        });
+
+        mImgBtnPrevious.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCurrentIndex = (mCurrentIndex - 1 + mCrimeList.size()) % mCrimeList.size();
+                updateData(mCurrentIndex);
+            }
+        });
+
+        mImgBtnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCurrentIndex = (mCurrentIndex + 1) % mCrimeList.size();
+                updateData(mCurrentIndex);
+            }
+        });
+
+        mImgBtnLast.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCurrentIndex = mCrimeList.size() - 1;
+                updateData(mCurrentIndex);;
+            }
+        });
+
+
+    }
+
+    private void updateData(int index) {
+        mEditTextTitle.setText(mCrimeList.get(index).getTitle().toString());
+        mCheckBoxSolved.setChecked(mCrimeList.get(index).isSolved());
     }
 
     private void updateCrime() {
