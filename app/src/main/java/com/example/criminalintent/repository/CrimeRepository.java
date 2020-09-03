@@ -68,6 +68,10 @@ public class CrimeRepository implements IRepository {
 
     @Override
     public void updateCrime(Crime crime) {
+        Crime findCrime = getCrime(crime.getId());
+        findCrime.setTitle(crime.getTitle());
+        findCrime.setSolved(crime.isSolved());
+        findCrime.setDate(crime.getDate());
     }
 
     @Override

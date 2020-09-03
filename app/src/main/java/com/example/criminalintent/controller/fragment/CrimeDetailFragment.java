@@ -113,6 +113,7 @@ public class CrimeDetailFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+        updateCrime();
 
         Log.d(TAG, "onPause");
     }
@@ -168,6 +169,8 @@ public class CrimeDetailFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 Log.d(TAG, "onTextChanged: " + s + ", " + start + ", " + before + ", " + count);
+
+                mCrime.setTitle(s.toString());
             }
 
             @Override
@@ -179,7 +182,7 @@ public class CrimeDetailFragment extends Fragment {
         mCheckBoxSolved.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
+                mCrime.setSolved(isChecked);
             }
         });
 
@@ -189,5 +192,9 @@ public class CrimeDetailFragment extends Fragment {
 
             }
         });
+    }
+
+    private void updateCrime() {
+        mRepository.updateCrime(mCrime);
     }
 }

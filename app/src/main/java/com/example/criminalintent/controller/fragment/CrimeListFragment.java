@@ -29,6 +29,7 @@ public class CrimeListFragment extends Fragment {
     public static final String TAG = "CLF";
 
     private RecyclerView mRecyclerView;
+    private CrimeAdapter mCrimeAdapter;
 
     private IRepository mRepository;
 
@@ -64,17 +65,31 @@ public class CrimeListFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        updateUI();
+    }
+
     private void findViews(View view) {
         mRecyclerView = view.findViewById(R.id.recycler_view_crime_list);
     }
 
     private void initViews() {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        updateUI();
+    }
 
+    private void updateUI() {
         List<Crime> crimes = mRepository.getCrimes();
-        CrimeAdapter crimeAdapter = new CrimeAdapter(crimes);
 
-        mRecyclerView.setAdapter(crimeAdapter);
+        if (mCrimeAdapter == null) {
+            mCrimeAdapter = new CrimeAdapter(crimes);
+            mRecyclerView.setAdapter(mCrimeAdapter);
+        } else {
+            mCrimeAdapter.notifyDataSetChanged();
+        }
     }
 
     private class CrimeHolder extends RecyclerView.ViewHolder {
@@ -94,7 +109,6 @@ public class CrimeListFragment extends Fragment {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    Intent intent = CrimeDetailActivity.newIntent(getActivity(), mCrime.getId());
                     Intent intent = CrimePagerActivity.newIntent(getActivity(), mCrime.getId());
                     startActivity(intent);
                 }
