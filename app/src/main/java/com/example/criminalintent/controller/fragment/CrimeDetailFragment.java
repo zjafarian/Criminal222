@@ -1,6 +1,7 @@
 package com.example.criminalintent.controller.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -33,6 +34,8 @@ public class CrimeDetailFragment extends Fragment {
 
     public static final String TAG = "CDF";
     public static final String ARGS_CRIME_ID = "crimeId";
+    public static final String ARGS_SAVE_INDEX = "save_index";
+
 
     private EditText mEditTextTitle;
     private Button mButtonDate;
@@ -45,9 +48,9 @@ public class CrimeDetailFragment extends Fragment {
     private ImageButton mImgBtnLast;
     private int mCurrentIndex;
     private List<Crime> mCrimeList;
+    private UUID mIdCrime;
 
     public static CrimeDetailFragment newInstance(UUID crimeId) {
-
         Bundle args = new Bundle();
         args.putSerializable(ARGS_CRIME_ID, crimeId);
 
@@ -71,6 +74,7 @@ public class CrimeDetailFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         Log.d(TAG, "onCreate");
         mCrimeList = new ArrayList<>();
         mRepository = CrimeRepository.getInstance();
@@ -78,6 +82,7 @@ public class CrimeDetailFragment extends Fragment {
 
         //this is storage of this fragment
         UUID crimeId = (UUID) getArguments().getSerializable(ARGS_CRIME_ID);
+        mCurrentIndex = getArguments().getInt(ARGS_SAVE_INDEX);
         mCrime = mRepository.getCrime(crimeId);
         for (int i = 0; i < mRepository.getCrimes().size(); i++) {
             if (mCrimeList.get(i).getId().equals(crimeId))
@@ -131,6 +136,7 @@ public class CrimeDetailFragment extends Fragment {
 
         Log.d(TAG, "onPause");
     }
+
 
     @Override
     public void onStop() {
@@ -189,6 +195,7 @@ public class CrimeDetailFragment extends Fragment {
                 Log.d(TAG, "onTextChanged: " + s + ", " + start + ", " + before + ", " + count);
 
                 mCrime.setTitle(s.toString());
+                mIdCrime = mCrime.getId();
             }
 
             @Override
@@ -201,6 +208,7 @@ public class CrimeDetailFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mCrime.setSolved(isChecked);
+                mIdCrime = mCrime.getId();
             }
         });
 
@@ -239,7 +247,8 @@ public class CrimeDetailFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 mCurrentIndex = mCrimeList.size() - 1;
-                updateData(mCurrentIndex);;
+                updateData(mCurrentIndex);
+
             }
         });
 
@@ -247,8 +256,10 @@ public class CrimeDetailFragment extends Fragment {
     }
 
     private void updateData(int index) {
-        mEditTextTitle.setText(mCrimeList.get(index).getTitle().toString());
-        mCheckBoxSolved.setChecked(mCrimeList.get(index).isSolved());
+        mCrime = mCrimeList.get(index);
+        mEditTextTitle.setText(mCrime.getTitle());
+        mCheckBoxSolved.setChecked(mCrime.isSolved());
+
     }
 
     private void updateCrime() {

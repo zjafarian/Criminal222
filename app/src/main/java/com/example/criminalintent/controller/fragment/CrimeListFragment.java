@@ -27,16 +27,17 @@ import java.util.List;
 public class CrimeListFragment extends Fragment {
 
     public static final String TAG = "CLF";
+    public static final String TAGINDEX = "Index";
 
     private RecyclerView mRecyclerView;
-    private CrimeAdapter mCrimeAdapter;
-
+    public CrimeAdapter mCrimeAdapter;
+    private int mIndex;
     private IRepository mRepository;
+
 
     public static CrimeListFragment newInstance() {
 
         Bundle args = new Bundle();
-
         CrimeListFragment fragment = new CrimeListFragment();
         fragment.setArguments(args);
         return fragment;
@@ -46,10 +47,17 @@ public class CrimeListFragment extends Fragment {
         // Required empty public constructor
     }
 
+    public CrimeAdapter getCrimeAdapter() {
+        return mCrimeAdapter;
+    }
+
+    public void setCrimeAdapter(CrimeAdapter crimeAdapter) {
+        mCrimeAdapter = crimeAdapter;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         mRepository = CrimeRepository.getInstance();
     }
 
@@ -68,8 +76,6 @@ public class CrimeListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        updateUI();
     }
 
     private void findViews(View view) {
@@ -78,10 +84,10 @@ public class CrimeListFragment extends Fragment {
 
     private void initViews() {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        updateUI();
+        updateUI(mIndex);
     }
 
-    private void updateUI() {
+    private void updateUI(int index) {
         List<Crime> crimes = mRepository.getCrimes();
 
         if (mCrimeAdapter == null) {
@@ -89,6 +95,7 @@ public class CrimeListFragment extends Fragment {
             mRecyclerView.setAdapter(mCrimeAdapter);
         } else {
             mCrimeAdapter.notifyDataSetChanged();
+            //mCrimeAdapter.notifyItemChanged(index);
         }
     }
 

@@ -51,6 +51,12 @@ public class CrimePagerActivity extends AppCompatActivity {
         initViews();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+
     private void findViews() {
         mViewPagerCrimes = findViewById(R.id.view_pager_crimes);
     }
@@ -85,7 +91,6 @@ public class CrimePagerActivity extends AppCompatActivity {
         @Override
         public Fragment createFragment(int position) {
             Log.d(TAG, "position: " + (position + 1));
-
             Crime crime = mCrimes.get(position);
             CrimeDetailFragment crimeDetailFragment =
                     CrimeDetailFragment.newInstance(crime.getId());
