@@ -3,6 +3,7 @@ package com.example.criminalintent.controller.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +16,7 @@ import com.example.criminalintent.R;
 import com.example.criminalintent.controller.fragment.CrimeDetailFragment;
 import com.example.criminalintent.model.Crime;
 import com.example.criminalintent.repository.CrimeRepository;
+import com.example.criminalintent.repository.IRepository;
 
 import java.util.List;
 import java.util.UUID;
@@ -22,7 +24,8 @@ import java.util.UUID;
 public class CrimePagerActivity extends AppCompatActivity {
 
     public static final String EXTRA_CRIME_ID = "com.example.criminalintent.crimeId";
-    private CrimeRepository mRepository;
+    public static final String TAG = "CPA";
+    private IRepository mRepository;
     private UUID mCrimeId;
 
     private ViewPager2 mViewPagerCrimes;
@@ -79,6 +82,8 @@ public class CrimePagerActivity extends AppCompatActivity {
         @NonNull
         @Override
         public Fragment createFragment(int position) {
+            Log.d(TAG, "position: " + (position + 1));
+
             Crime crime = mCrimes.get(position);
             CrimeDetailFragment crimeDetailFragment =
                     CrimeDetailFragment.newInstance(crime.getId());

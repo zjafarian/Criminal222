@@ -20,6 +20,7 @@ import com.example.criminalintent.controller.activity.CrimeDetailActivity;
 import com.example.criminalintent.controller.activity.CrimePagerActivity;
 import com.example.criminalintent.model.Crime;
 import com.example.criminalintent.repository.CrimeRepository;
+import com.example.criminalintent.repository.IRepository;
 
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class CrimeListFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
 
-    private CrimeRepository mRepository;
+    private IRepository mRepository;
 
     public static CrimeListFragment newInstance() {
 

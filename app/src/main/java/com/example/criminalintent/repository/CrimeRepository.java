@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class CrimeRepository {
+public class CrimeRepository implements IRepository {
 
     private static final int CRIME_SIZE = 100;
     private static CrimeRepository sInstance;
@@ -21,6 +21,7 @@ public class CrimeRepository {
     private List<Crime> mCrimes;
 
     private CrimeRepository() {
+        //create dummy object for test.
         mCrimes = new ArrayList<>();
         for (int i = 0; i < CRIME_SIZE; i++) {
             Crime crime = new Crime();
@@ -31,6 +32,7 @@ public class CrimeRepository {
         }
     }
 
+    @Override
     public List<Crime> getCrimes() {
         return mCrimes;
     }
@@ -39,6 +41,7 @@ public class CrimeRepository {
         mCrimes = crimes;
     }
 
+    @Override
     public Crime getCrime(UUID id) {
         for (Crime crime: mCrimes) {
             if (crime.getId().equals(id))
@@ -48,18 +51,26 @@ public class CrimeRepository {
         return null;
     }
 
+    @Override
     public void insertCrime(Crime crime) {
         mCrimes.add(crime);
     }
 
-    //TODO
+    @Override
     public void deleteCrime(Crime crime) {
+        for (int i = 0; i < mCrimes.size(); i++) {
+            if (mCrimes.get(i).getId().equals(crime.getId())) {
+                mCrimes.remove(i);
+                return;
+            }
+        }
     }
 
-    //TODO
+    @Override
     public void updateCrime(Crime crime) {
     }
 
+    @Override
     public int getPosition(UUID crimeId) {
         for (int i = 0; i < mCrimes.size(); i++) {
             if (mCrimes.get(i).getId().equals(crimeId))

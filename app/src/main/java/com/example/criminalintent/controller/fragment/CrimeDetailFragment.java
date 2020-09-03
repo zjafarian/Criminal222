@@ -22,6 +22,7 @@ import com.example.criminalintent.R;
 import com.example.criminalintent.controller.activity.CrimeDetailActivity;
 import com.example.criminalintent.model.Crime;
 import com.example.criminalintent.repository.CrimeRepository;
+import com.example.criminalintent.repository.IRepository;
 
 import java.util.UUID;
 
@@ -35,7 +36,7 @@ public class CrimeDetailFragment extends Fragment {
     private CheckBox mCheckBoxSolved;
 
     private Crime mCrime;
-    private CrimeRepository mRepository;
+    private IRepository mRepository;
 
     public static CrimeDetailFragment newInstance(UUID crimeId) {
 
@@ -65,9 +66,6 @@ public class CrimeDetailFragment extends Fragment {
         Log.d(TAG, "onCreate");
 
         mRepository = CrimeRepository.getInstance();
-
-        //this is storage for hosting activity
-//        UUID crimeId = (UUID) getActivity().getIntent().getSerializableExtra(CrimeDetailActivity.EXTRA_CRIME_ID);
 
         //this is storage of this fragment
         UUID crimeId = (UUID) getArguments().getSerializable(ARGS_CRIME_ID);
