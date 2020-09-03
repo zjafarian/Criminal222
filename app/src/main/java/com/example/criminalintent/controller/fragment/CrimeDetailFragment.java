@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.criminalintent.R;
+import com.example.criminalintent.controller.activity.CrimeDetailActivity;
 import com.example.criminalintent.model.Crime;
 import com.example.criminalintent.repository.CrimeRepository;
 
@@ -27,12 +28,24 @@ import java.util.UUID;
 public class CrimeDetailFragment extends Fragment {
 
     public static final String TAG = "CDF";
+    public static final String ARGS_CRIME_ID = "crimeId";
+
     private EditText mEditTextTitle;
     private Button mButtonDate;
     private CheckBox mCheckBoxSolved;
 
     private Crime mCrime;
     private CrimeRepository mRepository;
+
+    public static CrimeDetailFragment newInstance(UUID crimeId) {
+
+        Bundle args = new Bundle();
+        args.putSerializable(ARGS_CRIME_ID, crimeId);
+
+        CrimeDetailFragment fragment = new CrimeDetailFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     public CrimeDetailFragment() {
         // Required empty public constructor
@@ -53,11 +66,12 @@ public class CrimeDetailFragment extends Fragment {
 
         mRepository = CrimeRepository.getInstance();
 
-        //TODO: Anti pattern and code smell
-        UUID id = (UUID) getActivity().getIntent().getSerializableExtra(CrimeListFragment.EXTRA_CRIME_ID);
+        //this is storage for hosting activity
+//        UUID crimeId = (UUID) getActivity().getIntent().getSerializableExtra(CrimeDetailActivity.EXTRA_CRIME_ID);
 
-        CrimeRepository crimeRepository = CrimeRepository.getInstance();
-        mCrime = crimeRepository.getCrime(id);
+        //this is storage of this fragment
+        UUID crimeId = (UUID) getArguments().getSerializable(ARGS_CRIME_ID);
+        mCrime = mRepository.getCrime(crimeId);
     }
 
     /**

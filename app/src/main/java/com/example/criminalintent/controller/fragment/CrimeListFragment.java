@@ -2,6 +2,7 @@ package com.example.criminalintent.controller.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,11 +24,20 @@ import java.util.List;
 
 public class CrimeListFragment extends Fragment {
 
-    public static final String EXTRA_CRIME_ID = "com.example.criminalintent.crimeId";
+    public static final String TAG = "CLF";
 
     private RecyclerView mRecyclerView;
 
     private CrimeRepository mRepository;
+
+    public static CrimeListFragment newInstance() {
+
+        Bundle args = new Bundle();
+
+        CrimeListFragment fragment = new CrimeListFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     public CrimeListFragment() {
         // Required empty public constructor
@@ -82,9 +92,7 @@ public class CrimeListFragment extends Fragment {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //TODO: Refactore creating new intent.
-                    Intent intent = new Intent(getActivity(), CrimeDetailActivity.class);
-                    intent.putExtra(EXTRA_CRIME_ID, mCrime.getId());
+                    Intent intent = CrimeDetailActivity.newIntent(getActivity(), mCrime.getId());
                     startActivity(intent);
                 }
             });
@@ -122,6 +130,8 @@ public class CrimeListFragment extends Fragment {
         @NonNull
         @Override
         public CrimeHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            Log.d(TAG, "onCreateViewHolder");
+
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
             View view = layoutInflater.inflate(R.layout.crime_row_list, parent, false);
             CrimeHolder crimeHolder = new CrimeHolder(view);
@@ -130,6 +140,8 @@ public class CrimeListFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull CrimeHolder holder, int position) {
+            Log.d(TAG, "onBindViewHolder: " + position);
+
             Crime crime = mCrimes.get(position);
             holder.bindCrime(crime);
         }
